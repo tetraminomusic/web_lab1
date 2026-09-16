@@ -234,8 +234,6 @@ form.addEventListener('submit', function(event) {
     return;
   }
 
-  // Если всё заебись, идём дальше
-
   const isHit = checkHit(xVal, yVal, rVal);
   const timeString = getCurrentFormattedTime();
 

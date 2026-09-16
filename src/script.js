@@ -14,7 +14,7 @@ ctx.scale(dpr, dpr);
 const width = logicalSize;
 const height = logicalSize;
 const center = width / 2;
-const scale = 40;
+const scale = 36; // Уменьшили масштаб до 36, чтобы сетка от -5 до 5 идеально умещалась внутри холста
 
 function drawShape(r) {
   ctx.clearRect(0, 0, width, height);
@@ -65,41 +65,60 @@ function checkHit(x, y, r) {
 
 // отрисовка осей
 function drawAxes() {
+
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 1;
   ctx.fillStyle = 'black';
-  ctx.font = '12px Arial';
+  ctx.font = '11px Arial';
 
   ctx.beginPath();
 
-  // Ось X
-  ctx.moveTo(0, center);
-  ctx.lineTo(width, center);
+  // Ось X (внутри границ холста)
+  ctx.moveTo(10, center);
+  ctx.lineTo(width - 10, center);
 
-  // Ось Y
-  ctx.moveTo(center, 0);
-  ctx.lineTo(center, height)
-
-  ctx.stroke(); // рисуем
-
+  // Ось Y (внутри границ холста)
+  ctx.moveTo(center, 10);
+  ctx.lineTo(center, height - 10);
 
   // Стрелка оси X
-  ctx.beginPath();
-  ctx.moveTo(width - 10, center - 4);
-  ctx.lineTo(width, center);
-  ctx.lineTo(width - 10, center + 4);
+  ctx.moveTo(width - 18, center - 4);
+  ctx.lineTo(width - 10, center);
+  ctx.lineTo(width - 18, center + 4);
 
   // Стрелка оси Y
+  ctx.moveTo(center - 4, 18);
+  ctx.lineTo(center, 10);
+  ctx.lineTo(center + 4, 18);
 
-  ctx.moveTo(center - 4, 10);
-  ctx.lineTo(center, 0);
-  ctx.lineTo(center + 4, 10);
-  ctx.stroke();
+  ctx.stroke(); // рисуем оси и стрелки
 
-  // Подписываем оси
+  const values = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5];
 
-  ctx.fillText("X", width - 12, center + 15);
-  ctx.fillText("Y", center + 10, 12);
+  values.forEach(val => {
+    const pos = center + val * scale;
+
+    ctx.beginPath();
+    ctx.moveTo(pos, center - 3);
+    ctx.lineTo(pos, center + 3);
+
+    if (val !== 0) {
+      ctx.fillText(val, pos - 4, center + 15);
+    }
+
+    ctx.moveTo(center - 3, center - val * scale);
+    ctx.lineTo(center + 3, center - val * scale);
+
+    if (val !== 0) {
+      ctx.fillText(val, center + 6, center - val * scale + 4);
+    }
+    ctx.stroke();
+  });
+
+  // Подписываем оси и ноль внутри границ
+  ctx.fillText("X", width - 20, center - 8);
+  ctx.fillText("Y", center - 15, 18);
+  ctx.fillText("0", center - 10, center + 14);
 }
 
 // Возвращает численное значение выбранного чекбокса
